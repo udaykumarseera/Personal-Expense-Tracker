@@ -1,0 +1,14 @@
+# Maven build output
+**/target/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+**/application-local.properties
+
+# IDE and OS files
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

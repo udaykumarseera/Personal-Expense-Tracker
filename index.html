@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledgr — Personal Expense Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- React enhancement layer: added on top of the existing project, nothing below removed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <div class="mark">₹</div>
+    <div class="name"><span class="l1">Led</span><span class="l2">gr</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
+    <li><a href="#" data-page="transactions">Transactions</a></li>
+    <li><a href="#" data-page="add">Add Entry</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="avatar" id="avatarInitial">U</div>
+    <span class="user-name" id="userNameLabel">Udaya Kumar</span>
+    <button class="logout-btn">Logout</button>
+  </div>
+</nav>
+
+<!-- Login / Register (React). Shown instead of the app until the user signs in. -->
+<div id="reactAuthRoot"></div>
+<!-- Shown only when the Transaction Service cannot be reached -->
+<div id="reactConnectionRoot"></div>
+
+<main>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-head">
+      <span class="eyebrow">Passbook Summary</span>
+      <h1>Track every rupee.</h1>
+      <p>A running record of what comes in and what goes out — updated the moment you log it.</p>
+    </div>
+
+    <div class="summary-row">
+      <div class="card stamp-card balance">
+        <div class="label">Current Balance</div>
+        <div class="amount mono" id="statBalance">₹0</div>
+        <div class="sub">as of today</div>
+      </div>
+      <div class="card stamp-card income">
+        <div class="label">Total Income</div>
+        <div class="amount mono" id="statIncome">₹0</div>
+        <div class="sub" id="statIncomeCount">0 entries</div>
+      </div>
+      <div class="card stamp-card expense">
+        <div class="label">Total Expenses</div>
+        <div class="amount mono" id="statExpense">₹0</div>
+        <div class="sub" id="statExpenseCount">0 entries</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card panel">
+        <div class="section-title">Spending by Category</div>
+        <div id="categoryBreakdown"></div>
+      </div>
+      <div class="card panel">
+        <div class="section-title">Recent Entries</div>
+        <div id="recentList"></div>
+      </div>
+    </div>
+
+    <!-- React enhancement: Financial Analytics, added below the original two panels above -->
+    <div class="card panel" id="reactAnalyticsRoot"></div>
+  </section>
+
+  <!-- ===================== TRANSACTIONS ===================== -->
+  <section class="page" id="page-transactions">
+    <div class="page-head">
+      <span class="eyebrow">Full Register</span>
+      <h1>Transactions</h1>
+      <p>Every entry in the ledger, filterable by category.</p>
+    </div>
+
+    <!-- React enhancement: search + sort, added above the original filter pills -->
+    <div id="reactTransactionToolsRoot"></div>
+
+    <div class="filter-bar" id="filterBar"></div>
+
+    <div class="card panel">
+      <div class="section-title">
+        <span>All Entries</span>
+        <span class="mono" id="filterCount" style="font-size:12.5px; color:var(--ink-soft); font-weight:500;"></span>
+      </div>
+      <div id="fullList"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ADD ENTRY ===================== -->
+  <section class="page" id="page-add">
+    <div class="page-head">
+      <span class="eyebrow">New Line Item</span>
+      <h1>Add Entry</h1>
+      <p>Log an expense or income and it lands straight in your passbook.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card panel">
+        <div class="section-title">New Transaction</div>
+        <form id="entryForm" novalidate>
+          <div class="field">
+            <label>Type</label>
+            <div class="type-toggle">
+              <button type="button" class="sel-expense on" id="btnExpense">− Expense</button>
+              <button type="button" class="sel-income" id="btnIncome">+ Income</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fDesc">Description</label>
+            <input type="text" id="fDesc" placeholder="e.g. Groceries at Nilgiris" required>
+          </div>
+          <div class="field">
+            <label for="fAmount">Amount (₹)</label>
+            <input type="number" id="fAmount" placeholder="e.g. 850" min="1" step="0.01" required>
+          </div>
+          <div class="field">
+            <label for="fCategory">Category</label>
+            <select id="fCategory"></select>
+          </div>
+          <div class="field">
+            <label for="fDate">Date</label>
+            <input type="date" id="fDate" required>
+          </div>
+          <!-- React enhancement: validation messages render here -->
+          <div id="reactValidationRoot" class="validation-box"></div>
+          <button type="submit" class="submit-btn">Add to Passbook</button>
+        </form>
+      </div>
+
+      <div class="card panel">
+        <div class="section-title">Just Added</div>
+        <div id="justAddedList"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Ledgr — a personal expense tracker · powered by the Transaction and User services</footer>
+
+<!-- React enhancement: modal + toast roots, mounted at the end of the page -->
+<div id="reactModalRoot"></div>
+<div id="reactToastRoot"></div>
+
+<!-- Frontend config + data layer (talks to the Transaction Service), then the vanilla UI -->
+<script src="config.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+
+<!-- ================= REACT ENHANCEMENT LAYER =================
+     Everything below is NEW. Nothing above this comment (the original
+     HTML, CSS, or vanilla JavaScript) was removed or rewritten. -->
+<script type="text/babel" src="react-app.jsx"></script>
+</body>
+</html>
